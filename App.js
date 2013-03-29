@@ -1,5 +1,9 @@
-var parentRenderer = function(value) {
-    return value._refObjectName;
+var objectRenderer = function(value) {
+    if ( value ) {
+        return value._refObjectName;
+    } else { 
+        return "None";
+    }
 }
 
 Ext.define('CustomApp', {
@@ -28,13 +32,17 @@ Ext.define('CustomApp', {
         });
     },
     _showGrid: function(store) {
-        this.grid = Ext.create('Rally.ui.grid.Grid',{
-            store: store,
-            columnCfgs: [ 
-                { text: 'ID', dataIndex: 'FormattedID' }, 
-                {text: 'Name', dataIndex: 'Name', flex: 1},
-                {text: 'Parent', dataIndex: 'WorkProduct', renderer: parentRenderer } ]
-        });
-        this.down('#grid_box').add(this.grid);
+        if ( ! this.grid ) {
+            this.grid = Ext.create('Rally.ui.grid.Grid',{
+                store: store,
+                columnCfgs: [ 
+                    { text: 'ID', dataIndex: 'FormattedID' }, 
+                    {text: 'Name', dataIndex: 'Name', flex: 1},
+                    {text: 'Owner', dataIndex: 'Owner', renderer: objectRenderer },
+                    {text: 'Project', dataIndex: 'Project', renderer: objectRenderer },
+                    {text: 'Parent', dataIndex: 'WorkProduct', renderer: objectRenderer } ]
+            });
+            this.down('#grid_box').add(this.grid);
+        }
     }
 });
